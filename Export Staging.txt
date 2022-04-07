@@ -1,0 +1,42 @@
+Cloudera Folks
+
+
+=======
+Edge Node
+=======
+Login to Edge Node
+
+vi exdata
+
+1,Arun,2015-09-20
+2,zeyo,2015-09-21
+3,zeyovas,2015-09-22
+4,mohamed,2015-09-23
+5,arun,2015-09-24
+6,61,2015-09-24
+
+hadoop fs -put exdata /user/cloudera/
+
+
+=======
+Mysql
+=======
+
+create database stg;
+use stg;
+CREATE TABLE customermoda(custid INT,firstname VARCHAR(20),lastname VARCHAR(20));
+CREATE TABLE customermoda_stg(custid INT,firstname VARCHAR(20),lastname VARCHAR(20));
+
+
+=======
+Edge Node
+=======
+
+sqoop export --connect jdbc:mysql://localhost/stg --username root --password cloudera -m 1 --staging-table customermoda_stg --clear-staging-table --table customermoda --export-dir /user/cloudera/exdata
+
+=======
+mysql
+=======
+
+
+select * from customermoda_stg;

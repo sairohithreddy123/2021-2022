@@ -1,0 +1,66 @@
+Mysql 
+==============================
+
+mysql -uroot -pcloudera
+create database test;
+use test;
+
+CREATE TABLE customermoda(custid INT,firstname VARCHAR(20),createdt date);
+
+insert into customermoda values(1,'Arun','2015-09-20');
+insert into customermoda values(2,'srini','2015-09-21');
+insert into customermoda values(3,'vasu','2015-09-22');
+insert into customermoda values(4,'mohamed','2015-09-23');
+insert into customermoda values(5,'arun','2015-09-24');
+
+==============================
+Open Edge Node
+==============================
+
+
+sqoop import --connect jdbc:mysql://localhost/test --username root -password cloudera -m 1 --table customermoda --target-dir /user/cloudera/dataimportmod2
+
+hadoop fs -ls /user/cloudera/dataimportmod2
+hadoop fs -cat /user/cloudera/dataimportmod2/*
+
+==============================
+Mysql 
+==============================
+
+update customermoda set firstname='zeyo' where custid=3;
+select * from customermoda;
+
+==============================
+Open Edge Node
+==============================
+
+sqoop import --connect jdbc:mysql://localhost/test --username root -password cloudera -m 1 --table customermoda --target-dir /user/cloudera/dataimportmod2 --incremental lastmodified --check-column createdt --last-value 2015-09-22 --merge-key custid
+
+hadoop fs -ls /user/cloudera/dataimportmod2
+hadoop fs -cat /user/cloudera/dataimportmod2/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3_0004
+22/01/01 03:50:13 INFO mapreduce.Job: The url to track the job: http://quickstart.cloudera:8088/proxy/application_1641032581773_0004/
+22/01/01 03:50:13 INFO mapreduce.Job: Running job: job_1641032581773_0004
+22/01/01 03:50:26 INFO mapreduce.Job: Job job_1641032581773_0004 running in uber mode : false
+22/01/01 03:50:26 INFO mapreduce.Job:  map 0% reduce 0%
+22/01/01 03:50:42 INFO mapreduce.Job:  map 100% reduce 0%
+22/01/01 03:50:51 INFO mapreduce.Job:  map 100% reduce 100%
+22/01/01 03:50:52 INFO mapreduce.Job: Job job_1641032581773_0004 completed successfully
+22/01/01 03:50:52 INFO mapreduce.Job: Counters: 49
+        File System Counters
+                FILE: Number of bytes read=317
+                FILE: Number of bytes written=458856

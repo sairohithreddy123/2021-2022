@@ -1,0 +1,39 @@
+Task 1 ----
+
+
+======
+Mysql
+======
+create database test;
+use test;
+
+CREATE TABLE customer_mapper_avro(custid INT,firstname VARCHAR(20),lastname VARCHAR(20),city varchar(50),age int,createdt date,transactamt int );
+
+insert into customer_mapper_avro values(1,'Arun','Kumar','chennai',33,'2015-09-20',100000);
+insert into customer_mapper_avro values(2,'srini','vasan','chennai',33,'2015-09-21',10000);
+insert into customer_mapper_avro values(3,'vasu','devan','banglore',39,'2015-09-22',90000);
+insert into customer_mapper_avro values(4,'mohamed','imran','hyderabad',33,'2015-09-23',1000);
+insert into customer_mapper_avro values(5,'arun','basker','chennai',23,'2015-09-24',200000);
+
+============
+Edge Node
+============
+
+create a directory /home/cloudera/avrodir
+Go inside that directory   -- cd /home/cloudera/avrodir
+ls
+
+
+sqoop import --connect jdbc:mysql://localhost/test --username root --password cloudera --table customer_mapper_avro -m 1  --delete-target-dir --target-dir /user/cloudera/avrodata --as-avrodatafile
+
+Edge node:
+sqoop import --connect jdbc:mysql://localhost/sss --username root --password cloudera --table txntab -m 1 --target-dir /user/cloudera/parq_data --as-parquetfile
+
+
+
+
+hive 
+
+create external table parq_tab(id int,tdate string,category string)stored as parquet location'/user/cloudera/parq_data';
+
+hadoop fs -put customer_mapper_avro.avsc /user/cloudera/

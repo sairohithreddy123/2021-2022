@@ -1,0 +1,167 @@
+[17:13, 19/12/2021] Sai Bigdata: Cloudera FOLKS
+
+Open two terminals
+==========================
+Connect to mysql  ----- Done
+==========================
+
+mysql -uroot -pcloudera
+
+==========================
+Create the database as zeyodb;  ----- Done
+==========================
+create database zeyodb;
+use zeyodb;
+
+==========================
+create the table as customermod;(6 columns) ----- Done
+
+==========================
+
+CREATE TABLE customermod(custid INT,firstname VARCHAR(20),lastname VARCHAR(20),city varchar(50));
+
+
+==========================
+Insert from dummy records----- Done
+
+==========================
+
+insert into customermod values(1,'Arun','Kumar','chennai');
+insert into customermod values(2,'srini','vasan','chennai');
+insert into customermod values(3,'vasu','devan','banglore');
+insert into customermod values(4,'mohamed','imran','hyderabad');
+insert into customermod values(5,'arun','basker','chennai');
+
+==========================
+Verify the data in mysql table----- Done
+==========================
+
+select * from customermod;
+
+======================================
+Come to Edge Node =
+========================================
+
+
+=================================
+Shoot it
+==============================
+
+sqoop import --connect jdbc:mysql://localhost:3306/zeyodb --username root --password cloudera --table customermod -m 1 --delete-target-dir --target-dir /user/cloudera/firstimport  
+
+================================
+Check the target directory
+================================
+
+hadoop fs -ls /user/cloudera/firstimport  
+hadoop fs -cat /user/cloudera/firstimport/part-m-00000
+[17:18, 19/12/2021] Sai Bigdata: Lab FOLKS
+
+Open two terminals
+==========================
+Connect to mysql  ----- Done
+==========================
+
+mysql -u hr_user -h ms.itversity.com -pitversity
+
+==========================
+use database hr_export  ----- Done
+==========================
+
+use hr_export;
+
+==========================
+create the table as customermod_<urname>;(6 columns) ----- Done
+
+==========================
+
+CREATE TABLE customermod_<ur name>(custid INT,firstname VARCHAR(20),lastname VARCHAR(20),city varchar(50));
+
+
+==========================
+Insert from dummy records----- Done
+
+==========================
+
+insert into customermod_<ur name> values(1,'Arun','Kumar','chennai');
+insert into customermod_<ur name> values(2,'srini','vasan','chennai');
+insert into customermod_<ur name> values(3,'vasu','devan','banglore');
+insert into customermod_<ur name> values(4,'mohamed','imran','hyderabad');
+insert into customermod_<ur name> values(5,'arun','basker','chennai');
+
+==========================
+Verify the data in mysql table----- Done
+==========================
+
+select * from customermod_<ur name>;
+
+======================================
+Come to Edge Node =
+========================================
+
+
+=================================
+Shoot it
+==============================
+
+
+mysql -u hr_user -h ms.itversity.com -pitversity
+
+sqoop import --connect jdbc:mysql://ms.itversity.com/hr_export --username hr_user --password itversity --table customermod_<ur name> -m 1 --delete-target-dir --target-dir /user/<lab username>/firstimport  
+
+
+
+
+================================
+Check the target directory
+================================
+
+hadoop fs -ls /user/<lab username>/firstimport  
+hadoop fs -cat /user/<lab username>/firstimport/part-m-00000
+
+
+
+Controlling Import 
+-------------------
+
+sqoop import --connect jdbc:mysql://localhost:3306/zeyodb --username root --password cloudera --table customermod -m 1 --where "city='chennai'" --delete-target-dir --target-dir /user/cloudera/chennaidata  
+
+
+Cloudera Folks
+=======================
+Task 1 -------
+=======================
+Create a database zeyo1; -- > create database zeyo1;
+use zeyo1 ; --> use zeyo1;
+Create two tables
+
+
+CREATE TABLE cust_tab1(custid INT,firstname VARCHAR(20),lastname VARCHAR(20),city varchar(50));
+
+insert into cust_tab1 values(1,'Arun','Kumar','chennai');
+insert into cust_tab1 values(2,'srini','vasan','chennai');
+insert into cust_tab1 values(3,'vasu','devan','banglore');
+insert into cust_tab1 values(4,'mohamed','imran','hyderabad');
+insert into cust_tab1 values(5,'arun','basker','chennai');
+
+CREATE TABLE cust_tab2(custid INT,age int,createdt date,transactamt int );
+
+insert into cust_tab2 values(1,33,'2015-09-20',100000);
+insert into cust_tab2 values(2,33,'2015-09-21',10000);
+insert into cust_tab2 values(3,39,'2015-09-22',90000);
+insert into cust_tab2 values(4,33,'2015-09-23',1000);
+insert into cust_tab2 values(5,29,'2015-09-24',200000);
+
+===========
+Come to Edge Node- Shoot controlling import Command
+===========
+
+sqoop import --connect jdbc:mysql://localhost:3306/zeyo1 --username root --password cloudera -m 1 --query "select a.*,b.age,b.createdt,b.transactamt from cust_tab1 a join cust_tab2 b on a.custid=b.custid where \$CONDITIONS"  --delete-target-dir --target-dir /user/cloudera/joindata
+
+hadoop fs -cat /user/cloudera/joindata/*
+
+=======================
+Task 2 --------
+=======================
+
+What is the use of $CONDITIONS in sqoop ?

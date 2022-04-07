@@ -1,0 +1,27 @@
+Sqoop import –m 1 –connect ‘jdbc: sqlserver: //nameofmyserver; database=nameofmydatabase; username=DeZyre; password=mypassword’ –query “SELECT column_name, DATA_TYPE FROM INFORMATION_SCHEMA.Columns WHERE table_name=’mytableofinterest’ AND \$CONDITIONS” –target-dir ‘mytableofinterest_column_name’
+
+sqoop import --connect  jdbc:mysql://localhost/custdd --username root --password cloudera -query "select * from cust_s where custid=1 AND \$CONDITIONS" -m 1 --delete-target-dir --target-dir /user/cloudera/quesy_test
+
+
+
+
+
+
+Task ---
+
+Create the datbase and table in mysql
+
+create database dbser;
+use dbser;
+CREATE TABLE custser(custid INT,firstname VARCHAR(20),createdt date);
+
+insert into custser values(1,'Arun','2015-09-20');
+insert into custser values(2,'srini','2015-09-21');
+insert into custser values(3,'vasu','2015-09-22');
+
+Edge Node
+
+
+sqoop import --connect  jdbc:mysql://localhost/dbser --username root --password cloudera --table custser -m 1 --delete-target-dir --target-dir /user/cloudera/jobdata_test --as-avrodatafile
+
+hadoop fs -cat /user/cloudera/jobdata_test/*  ----> looking at the data dont panic

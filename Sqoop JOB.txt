@@ -1,0 +1,48 @@
+Cloudera folks
+
+=======================================
+Mysql 
+=======================================
+mysql -uroot -pcloudera
+
+create database custserdb;
+use custserdb;
+
+CREATE TABLE cust_job(custid INT,firstname VARCHAR(20),createdt date);
+
+
+insert into cust_job values(1,'Arun','2015-09-20');
+insert into cust_job values(2,'srini','2015-09-21');
+insert into cust_job values(3,'vasu','2015-09-22');
+
+=======================================
+Edge node create the job ,validate,execute
+=======================================
+hadoop dfsadmin -safemode leave
+
+sqoop job --create incjob -- import --connect jdbc:mysql://localhost/custserdb --username root --password cloudera --table cust_job -m 1 --target-dir /user/cloudera/job_out --incremental append --check-column custid --last-value 0
+
+sqoop job --list
+
+sqoop job --exec incjob      ---> give password cloudera and give enter
+
+hadoop fs -cat /user/cloudera/job_out/*
+cd
+cd .sqoop
+cat metastore.db.script | grep 'last.value'   --> you will see 3
+
+========================================
+Mysql
+=======================================
+
+insert into cust_job values(4,'mohamed','2015-09-23');
+insert into cust_job values(5,'ravi','2015-09-24');
+
+
+==============================
+execute the job again
+==============================
+sqoop job --exec incjob  ---> give password cloudera and give enter
+cd
+cd .sqoop
+cat metastore.db.script | grep 'last.value'    --> gets updated to 5

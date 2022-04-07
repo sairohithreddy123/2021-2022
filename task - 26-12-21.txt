@@ -1,0 +1,39 @@
+Task 1 ------
+
+Mysql ---
+
+create database custdd;
+use custdd;
+CREATE TABLE cust_s(custid INT,firstname VARCHAR(20));
+
+
+insert into cust_s values(1,'Arun');
+insert into cust_s values(2,'srini');
+insert into cust_s values(3,'vasu');
+
+
+Create a passfile --- in edge Node
+
+echo -n  cloudera>/home/cloudera/pfile
+
+Push it to hdfs
+
+hadoop fs -put /home/cloudera/pfile /user/cloudera/
+
+Create sqoop job with that hdfs path 
+
+sqoop job --create passjobh -- import --connect jdbc:mysql://localhost/custdd --username root --password-file hdfs:/user/cloudera/pfile --table cust_s -m 1 --target-dir /user/cloudera/job_out_h --incremental append --check-column custid --last-value 0
+
+Execute the Job
+
+sqoop job --exec passjobh   ->it should not ask the password 
+
+
+Task 2 ------->
+
+Import the same table as parquet
+
+sqoop import --connect jdbc:mysql://localhost/custdd --username root --password-file hdfs:/user/cloudera/pfile --table cust_s -m 1 --delete-target-dir --target-dir /user/cloudera/job_out_parquet --as-parquetfile
+
+
+hadoop fs -cat /user/cloudera/job_out_parquet

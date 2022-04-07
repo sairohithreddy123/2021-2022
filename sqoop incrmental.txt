@@ -1,0 +1,53 @@
+Cloudera Folks
+
+-------------------------
+Go to Mysql
+-------------------------
+
+mysql -uroot -pcloudera
+
+
+----------------------------
+create database and table 
+----------------------------
+create database incredb;
+use incredb;
+
+CREATE TABLE custoincre(custid INT,firstname VARCHAR(20),createdt date);
+
+
+insert into custoincre values(1,'Arun','2015-09-20');
+insert into custoincre values(2,'srini','2015-09-21');
+insert into custoincre values(3,'vasu','2015-09-22');
+
+
+----------------------------
+Come to edge node and execute
+----------------------------
+
+sqoop import --connect jdbc:mysql://localhost/incredb --username root --password cloudera --table custoincre -m 1 --target-dir /user/cloudera/datadir
+
+hadoop fs -ls /user/cloudera/datadir
+hadoop fs -cat /user/cloudera/datadir/part-m-00000
+
+
+----------------------------
+Come to mysql and add 2 more records
+----------------------------
+
+insert into custoincre values(4,'mohamed','2015-09-23');
+insert into custoincre values(5,'arun','2015-09-24');
+
+----------------------------
+Come to edge node and execute incremental command
+----------------------------
+
+sqoop import --connect jdbc:mysql://localhost/incredb --username root --password cloudera --table custoincre -m 1 --target-dir /user/cloudera/datadir --incremental append --check-column custid --last-value 3
+
+
+----------------------------
+Come to edge node to verify new data
+----------------------------
+
+hadoop fs -ls /user/cloudera/datadir
+hadoop fs -cat /user/cloudera/datadir/part-m-00001

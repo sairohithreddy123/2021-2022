@@ -1,0 +1,38 @@
+Sequence File Format --- 
+
+
+1) Less used Now 
+2) Has lot of Java involved --- Java Patches
+3) Close friend of MapReduce  --- 99.99% Gone
+
+   --- Since Sequence is further java and Mapreduce Is java --- So read ,process,write sequence file is easy for Mapreduce 
+
+
+2) Parquet
+
+Columnar file format  --- Always--- Target System
+62% of Data compression compared to textFile
+Faster Queries
+Parquet has schema (Column details) at the Footer 
+Auto read Schema
+No Schema Evolution
+
+
+3) ORC File format -------- Optimized Row Columnar 
+
+Columnar file Format
+High data compression 
+78-87% Data compression than textFile
+ORC File used more towards historical Data Storage
+
+
+
+4) AVRO
+
+MR or Hive is not supporting schema evolution to Doug Cutting
+2007 ----- May
+2007 ----- August
+
+For Schema (Column Changes) I have format knowns as AVRO	
+Schema evolution
+Row File format
